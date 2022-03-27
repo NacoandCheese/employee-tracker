@@ -66,11 +66,11 @@ const startPrompt = () => {
                     }
                 });
         } else if (answer.userResponse === 'View all Roles') {
-            connection.query('SELECT * FROM role',
+            connection.query('SELECT * FROM roles',
                 (error, res) => {
                     if (res) {
                         res.forEach(function (value) {
-                            console.log(value.role);
+                            console.log(value.roles);
                         });
 
                         // startPrompt();
