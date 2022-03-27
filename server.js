@@ -73,7 +73,7 @@ const startPrompt = () => {
                             console.log(value.role);
                         });
 
-                        startPrompt();
+                        // startPrompt();
                     } else {
                         console.log(error)
                     }
