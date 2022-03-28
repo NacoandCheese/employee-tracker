@@ -29,13 +29,14 @@ const startPrompt = () => {
         {
             type: 'list',
             name: 'userResponse',
-            message: 'Select one to view :',
+            message: 'What would you like to do? :',
             choices: [
                 'View all Departments',
                 'View all Roles',
                 'View all Employees',
                 'Would you like to add a department?',
                 'Would you like to add a role?',
+                'Would you like to add a employee?',
 
                 'Exit'
             ]
@@ -86,16 +87,20 @@ const startPrompt = () => {
                 });
         } else if (answer.userResponse === 'View all Employees') {
             connection.query('SELECT * FROM employee',
-             (error, res) => {
-                 if (res) {
-                     res.forEach(function (value) {
-                        console.log(
-                            value.first_name, 
-                            value.last_name 
+                (error, res) => {
+                    if (res) {
+                        res.forEach(function (value) {
+                            console.log(
+                                value.first_name,
+                                value.last_name,
+                                value.role_id,
+                                value.manager_id
                             )
-                     })
-                 }
-             })
+                        });
+                        
+                        startPrompt();
+                    }
+                });
         } else if (answer.userResponse === 'Exit') {
             console.log('Closing database connection')
             connection.end()
@@ -109,10 +114,10 @@ const startPrompt = () => {
                 connection.query(`INSERT INTO department (department_name) VALUES ('${answer.userResponse}')`)
 
                 startPrompt();
-                
-            }) 
 
-            
+            });
+
+
         } else if (answer.userResponse === 'Would you like to add a role?') {
             inquirer.prompt({
                 type: 'input',
@@ -121,10 +126,23 @@ const startPrompt = () => {
             }).then((answer) => {
                 console.log('The user has just added a new role:', answer.userResponse)
                 connection.query(`INSERT INTO roles (title, salary, department_id) VALUES ('${answer.userResponse}', '50000', 1)`)
-            })
+
+                startPrompt();
+            });
+        } else if (answer.userResponse === 'Would you like to add a employee?') {
+            inquirer.prompt({
+                type: 'input',
+                name: 'userResponse',
+                message: 'Who would you like to add?'
+            }).then((answer) => {
+                console.log('The user has just added a new employee:', answer.userResponse)
+                connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${answer.userResponse}', 'Donaldson', 3, NULL)`)
+
+                startPrompt();
+            });
         }
-    })
-}
+    });
+};
 
 
 
